@@ -1,4 +1,4 @@
-import { THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad } from './scene.js';
+import { setNight, getNight, THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad } from './scene.js';
 import { OrbitControls } from './OrbitControls.js';
 const $ = (id) => document.getElementById(id);
 // ---- static (read-only) city state: everything built, no reveal animation
@@ -63,6 +63,7 @@ const dist = () => camera.position.distanceTo(controls.target);
 $('zin').onclick = () => { const d = camera.position.clone().sub(controls.target).multiplyScalar(.6); flyTo(controls.target.clone().add(d), controls.target.clone(), .5); };
 $('zout').onclick = () => { const d = camera.position.clone().sub(controls.target).multiplyScalar(1.6); flyTo(controls.target.clone().add(d), controls.target.clone(), .5); };
 $('gnd').onclick = () => { const t = controls.target.clone(); t.y = 3; const d = new THREE.Vector3(camera.position.x - t.x, 0, camera.position.z - t.z); if (d.lengthSq() < 1) d.set(0, 0, 1); d.setLength(20); flyTo(new THREE.Vector3(t.x + d.x, 3.4, t.z + d.z), t, 1.1); };
+const nb = $('nite'); nb.onclick = () => { const n = setNight(!getNight()); nb.textContent = n ? '☀️' : '🌙'; nb.setAttribute('aria-label', n ? 'وضع النهار' : 'وضع الليل'); document.body.classList.toggle('night', n); };
 $('top2').onclick = () => { const t = controls.target.clone(); t.y = 2; flyTo(new THREE.Vector3(t.x + 40, 190, t.z + 110), t, 1.3); };
 // ---- service buttons (WhatsApp) above cinema / future services
 const WA = '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.8.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4z"/></svg>';

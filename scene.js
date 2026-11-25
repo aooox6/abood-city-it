@@ -27,7 +27,7 @@ const scene = new THREE.Scene();
 const FOGC = new THREE.Color(0xe9cf9f);
 scene.fog = new THREE.FogExp2(FOGC, 0.0012);
 const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.4, 9000);
-scene.add(new THREE.HemisphereLight(0xdfe8ff, 0xd8b27a, 1.55));
+const hemi = new THREE.HemisphereLight(0xdfe8ff, 0xd8b27a, 1.55); scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xfff0d2, 2.1); sun.position.set(-70, 95, 55); scene.add(sun);
 
 // sky
@@ -41,9 +41,9 @@ scene.add(sky);
 
 // ground
 const groundMat = new THREE.ShaderMaterial({
-  uniforms: { uReveal: { value: 0 }, uYellow: { value: 0 }, uCell: { value: CELL }, uFog: { value: 0.001 }, uZF: { value: 9999 }, uBand: { value: 0 }, uFogC: { value: new THREE.Vector3(.914, .808, .624) } },
+  uniforms: { uReveal: { value: 0 }, uYellow: { value: 0 }, uCell: { value: CELL }, uFog: { value: 0.001 }, uZF: { value: 9999 }, uBand: { value: 0 }, uNight: { value: 0 }, uFogC: { value: new THREE.Vector3(.914, .808, .624) } },
   vertexShader: 'varying vec3 vW; void main(){ vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }',
-  fragmentShader: `varying vec3 vW; uniform float uReveal,uYellow,uCell,uFog,uZF,uBand; uniform vec3 uFogC;
+  fragmentShader: `varying vec3 vW; uniform float uReveal,uYellow,uCell,uFog,uZF,uBand,uNight; uniform vec3 uFogC;
    float h21(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
    float vn(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.-2.*f); return mix(mix(h21(i),h21(i+vec2(1,0)),f.x),mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),f.x),f.y); }
    void main(){
@@ -66,7 +66,7 @@ const groundMat = new THREE.ShaderMaterial({
     float band=smoothstep(uReveal-2.0,uReveal-.9,r)*(1.-smoothstep(uReveal-.9,uReveal,r));
     col=mix(col,vec3(.98,.86,.18),band*uYellow);
     col+=vec3(1.,.78,.3)*(1.-smoothstep(0.,4.,abs(vW.z-uZF)))*uBand*.8;
-    float fg=1.-exp(-pow(vDist*uFog,2.)); col=mix(col,uFogC,clamp(fg,0.,1.));
+    col*=mix(vec3(1.),vec3(.30,.36,.62),uNight); float fg=1.-exp(-pow(vDist*uFog,2.)); col=mix(col,uFogC,clamp(fg,0.,1.));
     gl_FragColor=vec4(col,1.); }` });
 const ground = new THREE.Mesh(new THREE.PlaneGeometry(14000, 14000), groundMat); ground.rotation.x = -Math.PI / 2; scene.add(ground);
 
@@ -216,7 +216,62 @@ const mosque = (() => { const g = new THREE.Group(); g.position.copy(svPos('mosq
   const pool = new THREE.Mesh(new THREE.PlaneGeometry(30, 30).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: glowTex, color: 0xffc866, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })); pool.position.y = .15; g.add(pool);
   glow.material.opacity = .3; glow2.material.opacity = .25; pool.material.opacity = .4; g.scale.setScalar(.0001); scene.add(g); return { g, top: 22 }; })();
 
+// ---------- central bank (episode 8) ----------
+const goldM = new THREE.MeshLambertMaterial({ color: '#e0ad34', emissive: '#7a5410' });
+const bank = (() => { const g = new THREE.Group(); g.position.copy(svPos('bank'));
+  const cream = M('#f1e6cc'), cream2 = M('#dccfae'), stone = M('#e8dec6'), green = M('#17503f'), lit = MB('#ffd27a');
+  const P = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); g.add(m); return m; };
+  P(BX(12.6, .5, 11.4), stone, 0, .25, .9);
+  P(BX(10.4, 6.6, 8), cream, 0, 3.9, 0);
+  P(BX(2.4, 3.6, .14), lit, 0, 2.6, 4.06); for (const sx of [-3.4, 3.4]) P(BX(1.1, 2.2, .12), lit, sx, 3.8, 4.06);
+  for (const sx of [-4.5, -2.7, -.9, .9, 2.7, 4.5]) { P(new THREE.CylinderGeometry(.5, .56, 6.6, 14), cream2, sx, 3.8, 4.8); P(BX(1.3, .32, 1.3), cream2, sx, 7.2, 4.8); }
+  P(BX(11.6, .6, 10), cream2, 0, 7.5, .5);
+  const sh = new THREE.Shape(); sh.moveTo(-6, 0); sh.lineTo(6, 0); sh.lineTo(0, 2.6); sh.closePath(); const ped = new THREE.ExtrudeGeometry(sh, { depth: 1.4, bevelEnabled: false }); ped.translate(0, 0, -.7);
+  P(ped, cream, 0, 7.8, 4.9);
+  P(BX(8.4, 1.3, .25), green, 0, 8.55, 5.75);
+  P(new THREE.CylinderGeometry(3.0, 3.2, 1.3, 26), cream, 0, 8.45, 0);
+  const dome = P(new THREE.SphereGeometry(3.1, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2), goldM, 0, 9.1, 0); dome.scale.y = 1.1;
+  P(new THREE.CylinderGeometry(.12, .12, 1.8, 8), goldM, 0, 13.4, 0);
+  const sc = document.createElement('canvas'); sc.width = 1024; sc.height = 140; { const c2 = sc.getContext('2d'); c2.fillStyle = '#ffd45a'; c2.textAlign = 'center'; c2.textBaseline = 'middle'; c2.direction = 'rtl'; c2.font = '900 104px Zain, sans-serif'; c2.fillText('البنك المركزي', 512, 74); }
+  const st = new THREE.CanvasTexture(sc); st.colorSpace = THREE.SRGBColorSpace; st.anisotropy = 8;
+  const sign = new THREE.Mesh(new THREE.PlaneGeometry(8.0, 1.1), new THREE.MeshBasicMaterial({ map: st, transparent: true })); sign.position.set(0, 8.55, 5.9); g.add(sign);
+  const glow = sprite(0xffb347, 40, .3); glow.position.set(0, 8, 6); g.add(glow);
+  const pool = new THREE.Mesh(new THREE.PlaneGeometry(30, 30).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: glowTex, color: 0xffc866, transparent: true, opacity: .4, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })); pool.position.set(0, .12, 3); g.add(pool);
+  scene.add(g); return { g, glow, pool }; })();
 
+// ---------- street lamps + day/night ----------
+const LAMPS = []; for (let i = -9; i <= 8; i++) for (let j = -9; j <= 8; j++) LAMPS.push([i * CELL + 7 + 2.0, j * CELL + 7 + 2.0]);
+const mkI = (geo, mat, n) => { const m = new THREE.InstancedMesh(geo, mat, n); m.frustumCulled = false; scene.add(m); return m; };
+const lampPole = mkI(new THREE.BoxGeometry(.28, 6, .28), new THREE.MeshLambertMaterial({ color: '#3b3d42' }), LAMPS.length);
+const lampHead = mkI(new THREE.BoxGeometry(1.5, .34, .7), new THREE.MeshBasicMaterial({ color: 0xffe9a8 }), LAMPS.length);
+const lampPool = mkI(new THREE.PlaneGeometry(11, 11).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: glowTex, color: 0xffc866, transparent: true, opacity: .9, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }), LAMPS.length);
+{ const m4 = new THREE.Matrix4(); LAMPS.forEach(([x, z], i) => {
+    lampPole.setMatrixAt(i, m4.makeTranslation(x, 3, z)); lampHead.setMatrixAt(i, m4.makeTranslation(x, 6.1, z)); lampPool.setMatrixAt(i, m4.makeTranslation(x, .13, z)); }); }
+lampPole.visible = lampHead.visible = lampPool.visible = false;
+const daySky = sky.material;
+const nightSky = new THREE.ShaderMaterial({ side: THREE.BackSide, depthWrite: false, fog: false,
+  vertexShader: 'varying vec3 vD; void main(){ vD=normalize(position); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+  fragmentShader: `varying vec3 vD; float h21(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
+   void main(){ vec3 d=normalize(vD); float h=clamp(d.y,0.,1.);
+    vec3 hor=vec3(.07,.12,.27), mid=vec3(.03,.06,.17), top=vec3(.012,.025,.085);
+    vec3 c=mix(hor,mid,smoothstep(0.,.14,h)); c=mix(c,top,smoothstep(.1,.6,h));
+    vec2 uv=vec2(atan(d.z,d.x),asin(clamp(d.y,-1.,1.)))*70.; vec2 cl=floor(uv); float r=h21(cl); float st=step(.987,r)*smoothstep(.06,.25,h); vec2 fc=fract(uv)-.5; st*=smoothstep(.5,.0,length(fc)*1.6);
+    c+=vec3(.85,.9,1.)*st*(.5+.5*h21(cl+3.));
+    vec3 md=normalize(vec3(-.45,.5,.55)); float m=dot(d,md); c+=vec3(.95,.96,.88)*smoothstep(.9965,.9985,m)+vec3(.35,.4,.6)*smoothstep(.97,.999,m)*.35;
+    gl_FragColor=vec4(c,1.); }` });
+const DAY = { clear: 0xe8cf9f, fog: 0xe9cf9f, ufog: [.914, .808, .624], hs: 0xdfe8ff, hg: 0xd8b27a, hi: 1.55, sun: 0xfff0d2, si: 2.1, dust: 0xf3dcb2 };
+const NIGHT = { clear: 0x0a1330, fog: 0x0b1530, ufog: [.043, .082, .19], hs: 0x7d93d6, hg: 0x303658, hi: 1.05, sun: 0xa9bcff, si: 1.0, dust: 0x9fb2e6 };
+let isNight = false;
+function setNight(on) {
+  isNight = !!on; const k = isNight ? NIGHT : DAY;
+  renderer.setClearColor(k.clear); scene.fog.color.set(k.fog); groundMat.uniforms.uFogC.value.set(...k.ufog); groundMat.uniforms.uNight.value = isNight ? 1 : 0;
+  hemi.color.set(k.hs); hemi.groundColor.set(k.hg); hemi.intensity = k.hi; sun.color.set(k.sun); sun.intensity = k.si;
+  sky.material = isNight ? nightSky : daySky; dust.material.color.set(k.dust);
+  if (isNight) { matWin.color.set('#ffd77a'); matWin.emissive.set('#ffb640'); matWin.emissiveIntensity = 1.3; } else { matWin.color.set('#5e92c0'); matWin.emissive.set('#000000'); matWin.emissiveIntensity = 1; }
+  lampPole.visible = lampHead.visible = lampPool.visible = isNight;
+  bank.glow.material.opacity = isNight ? .75 : .3; bank.pool.material.opacity = isNight ? .8 : .4;
+  return isNight;
+}
+const getNight = () => isNight;
 
-
-export { THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad, sprite };
+export { setNight, getNight, bank,  THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad, sprite };
