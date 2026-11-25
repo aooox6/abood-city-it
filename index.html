@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>مدينة عبود</title><meta name="theme-color" content="#1f2e25">
+<meta property="og:title" content="مدينة عبود — دوّر على بيتك"><meta property="og:description" content="مدينة ثلاثية الأبعاد لمتابعي عبود ستور. ادخل واستكشف وابحث عن يوزرك.">
+<link rel="icon" href="store.png"><link rel="stylesheet" href="fonts.css"><link rel="stylesheet" href="style.css">
+<script type="importmap">{"imports":{"three":"./three.module.js"}}</script></head>
+<body>
+<canvas id="c"></canvas>
+<div id="top">
+ <div id="brand"><img src="store.png" alt=""><div><b>مدينة عبود</b><small><span id="cnt">0</span> بيت</small></div></div>
+ <div id="searchbox"><input id="q" type="search" inputmode="search" autocomplete="off" placeholder="ابحث باليوزر أو الاسم أو رقم البيت" aria-label="بحث"><div id="res"></div></div>
+</div>
+<div id="wa" class="svcbtn" style="display:none"></div>
+<div id="card" class="hide"><button id="x" aria-label="إغلاق">×</button><div class="n" id="cn"></div><div class="nm" id="cname"></div><div class="hd" id="chandle"></div>
+ <div class="act"><a id="cig" target="_blank" rel="noopener">فتح الإنستغرام</a><button id="cshare">مشاركة الرابط</button></div></div>
+<div id="ctl"><button id="zin" aria-label="تقريب">+</button><button id="zout" aria-label="تبعيد">−</button><button id="gnd" aria-label="منظور الشارع">🚶</button><button id="top2" aria-label="منظر علوي">🗺</button></div>
+<div id="hint">اسحب للتدوير · اسحب بإصبعين للتحريك · اضغط على أي بيت</div>
+<div id="toast"></div>
+<div id="load"><img src="store.png" alt=""><div>جاري بناء المدينة…</div></div>
+<script type="module" src="app.js"></script>
+</body></html>
