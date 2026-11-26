@@ -1,4 +1,4 @@
-import { setNight, getNight, THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad } from './scene.js';
+import { setNight, getNight, shahid, THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad } from './scene.js';
 import { OrbitControls } from './OrbitControls.js';
 const $ = (id) => document.getElementById(id);
 // ---- static (read-only) city state: everything built, no reveal animation
@@ -27,7 +27,7 @@ let sel = null;
 function select(h, fly = true) {
   sel = h; const p = h.g.position, f = h.f;
   focusPad.position.set(p.x, .2, p.z); focusPad.visible = true; beam.position.set(p.x, 30, p.z); beam.visible = true;
-  $('cn').textContent = '#' + f.slot; $('cname').textContent = f.name_display || f.name_original; $('chandle').textContent = f.handle;
+  $('cn').textContent = '#' + f.slot; $('cname').textContent = f.name_display || f.name_original || 'ساكن المدينة'; $('chandle').textContent = f.handle;
   $('cig').href = 'https://instagram.com/' + String(f.handle).replace(/^@/, ''); $('card').classList.remove('hide');
   const u = new URL(location.href); u.search = '?house=' + f.slot; u.hash = ''; history.replaceState(null, '', u);
   if (fly) { const tg = new THREE.Vector3(p.x + 2, 3, p.z + 3); flyTo(new THREE.Vector3(p.x + 10, 7.5, p.z + 22), tg, 1.7); }
@@ -44,8 +44,9 @@ const ray = new THREE.Raycaster(), ptr = new THREE.Vector2(); let down = null;
 renderer.domElement.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; $('res').style.display = 'none'; $('q').blur(); });
 renderer.domElement.addEventListener('pointerup', e => { if (!down) return; const d = Math.hypot(e.clientX - down.x, e.clientY - down.y), dt = performance.now() - down.t; down = null; if (d > 7 || dt > 450) return;
   ptr.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(ptr, camera);
-  const ch = ray.intersectObject(cinema.g, true)[0], hh = ray.intersectObjects(houses.map(h => h.g), true)[0];
-  if (ch && (!hh || ch.distance < hh.distance)) { const s = CITY.services.find(x => x.id === 'netflix'); if (s && s.whatsapp) { openWA(s.whatsapp); return; } }
+  const hh = ray.intersectObjects(houses.map(h => h.g), true)[0];
+  const sv = [['netflix', cinema.g], ['shahid', shahid.g]].map(([id, g]) => ({ id, hit: ray.intersectObject(g, true)[0] })).filter(x => x.hit).sort((a, b) => a.hit.distance - b.hit.distance)[0];
+  if (sv && (!hh || sv.hit.distance < hh.distance)) { const s = CITY.services.find(x => x.id === sv.id); if (s && s.whatsapp) { openWA(s.whatsapp); return; } }
   const hit = hh; if (!hit) return; let o = hit.object; while (o && !(o.userData && o.userData.house)) o = o.parent; if (o) select(o.userData.house); });
 // ---- search (Arabic-friendly)
 const norm = (s) => String(s || '').toLowerCase().replace(/[ً-ٰٟـ]/g, '').replace(/[أإآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/^@/, '').replace(/\s+/g, ' ').trim();
@@ -69,7 +70,7 @@ $('top2').onclick = () => { const t = controls.target.clone(); t.y = 2; flyTo(ne
 const WA = '<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.8.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4z"/></svg>';
 const svc = []; for (const s of CITY.services) { if (!s.whatsapp) continue; const el = document.createElement('div'); el.className = 'svcbtn'; el.innerHTML = WA + `<div>${esc(s.whatsapp.label || 'واتساب')}<small>${esc(s.name)}</small></div>`;
   el.onclick = () => openWA(s.whatsapp);
-  document.body.appendChild(el); const top = s.id === 'netflix' ? cinema.top + 3 : 12; svc.push({ el, pos: svPos(s.id).clone().setY(top) }); }
+  document.body.appendChild(el); const top = s.id === 'netflix' ? cinema.top + 3 : s.id === 'shahid' ? shahid.top + 2.5 : 12; svc.push({ el, pos: svPos(s.id).clone().setY(top) }); }
 const v3 = new THREE.Vector3();
 // ---- loop
 function frame(now) {

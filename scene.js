@@ -239,8 +239,32 @@ const bank = (() => { const g = new THREE.Group(); g.position.copy(svPos('bank')
   const pool = new THREE.Mesh(new THREE.PlaneGeometry(30, 30).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: glowTex, color: 0xffc866, transparent: true, opacity: .4, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })); pool.position.set(0, .12, 3); g.add(pool);
   scene.add(g); return { g, glow, pool }; })();
 
+// ---------- Shahid VIP (episode 9, opened at 300 followers) ----------
+const SHAHID_TEX = await new Promise(res => new THREE.TextureLoader().load('shahid.png', t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; res(t); }));
+const shahid = (() => { const g = new THREE.Group(); g.position.copy(svPos('shahid')); const add = addTo(g);
+  const body = M('#101c30'), deck = M('#0a1322');
+  const green = new THREE.MeshLambertMaterial({ color: '#2bd67b', emissive: '#12804a' }), blue = new THREE.MeshLambertMaterial({ color: '#0a84f0', emissive: '#054a8c' }), teal = new THREE.MeshLambertMaterial({ color: '#17abbd', emissive: '#0b5f6b' });
+  add(BX(12.4, .4, 11.2), deck, 0, .2, .6);
+  add(BX(11.2, 8.6, 8.2), body, 0, 4.5, 0);
+  // gradient crown (green -> blue) and base trim
+  [green, teal, blue].forEach((m, i) => { add(BX(3.96, .55, 9.0), m, -3.96 + i * 3.96, 9.07, 0); add(BX(3.8, .2, 8.5), m, -3.8 + i * 3.8, .5, 0); });
+  // side pillars of light
+  add(BX(.3, 8.6, .3), green, -5.6, 4.5, 4.15); add(BX(.3, 8.6, .3), blue, 5.6, 4.5, 4.15);
+  for (const sx of [-4.0, 4.0]) for (const yy of [2.0, 4.1]) add(BX(1.7, 1.35, .12), MB(sx < 0 ? '#9ff3c9' : '#9fd2ff'), sx, yy, 4.13);
+  add(BX(2.6, 3.2, .14), MB('#c9fff0'), 0, 1.9, 4.13); add(BX(.12, 3.2, .1), deck, 0, 1.9, 4.23);
+  add(BX(4.4, .3, 2.0), teal, 0, 3.8, 5.0); for (const sx of [-2.0, 2.0]) add(BX(.2, 3.5, .2), deck, sx, 2.0, 5.85);
+  const sc = document.createElement('canvas'); sc.width = 1024; sc.height = 220; { const c = sc.getContext('2d'); rr(c, 4, 4, 1016, 212, 40); c.fillStyle = '#060c17'; c.fill(); const gr = c.createLinearGradient(80, 0, 944, 0); gr.addColorStop(0, '#0a84f0'); gr.addColorStop(1, '#2ee07f'); c.lineWidth = 8; c.strokeStyle = gr; c.stroke(); c.fillStyle = gr; c.textAlign = 'center'; c.textBaseline = 'middle'; c.direction = 'rtl'; c.font = '900 150px Zain, sans-serif'; c.fillText('شاهد VIP', 512, 118); }
+  const st = new THREE.CanvasTexture(sc); st.colorSpace = THREE.SRGBColorSpace; st.anisotropy = 8;
+  const sign = new THREE.Mesh(new THREE.PlaneGeometry(9.6, 2.06), new THREE.MeshBasicMaterial({ map: st, transparent: true })); sign.position.set(0, 6.55, 4.22); g.add(sign);
+  add(BX(.45, 2.4, .45), teal, 0, 10.4, 0);
+  const logoMat = new THREE.MeshBasicMaterial({ map: SHAHID_TEX, transparent: true, side: THREE.DoubleSide, fog: false, depthWrite: false });
+  const logo = new THREE.Mesh(new THREE.PlaneGeometry(9.6, 9.6), logoMat); logo.position.set(0, 15.0, .05); g.add(logo);
+  const gl = sprite(0x1fd6a0, 30, .45); gl.position.set(0, 15.0, -1); g.add(gl); const gl2 = sprite(0x1597e8, 26, .4); gl2.position.set(0, 3, 8.5); g.add(gl2);
+  const pool = new THREE.Mesh(new THREE.PlaneGeometry(30, 30).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: glowTex, color: 0x2fd0c0, transparent: true, opacity: .45, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })); pool.position.set(0, .14, 3); g.add(pool);
+  scene.add(g); return { g, top: 19.5, logo, glow: gl, glow2: gl2, pool }; })();
+
 // ---------- street lamps + day/night ----------
-const LAMPS = []; for (let i = -9; i <= 8; i++) for (let j = -9; j <= 8; j++) LAMPS.push([i * CELL + 7 + 2.0, j * CELL + 7 + 2.0]);
+const LAMPS = []; for (let i = -10; i <= 9; i++) for (let j = -10; j <= 9; j++) LAMPS.push([i * CELL + 7 + 2.0, j * CELL + 7 + 2.0]);
 const mkI = (geo, mat, n) => { const m = new THREE.InstancedMesh(geo, mat, n); m.frustumCulled = false; scene.add(m); return m; };
 const lampPole = mkI(new THREE.BoxGeometry(.28, 6, .28), new THREE.MeshLambertMaterial({ color: '#3b3d42' }), LAMPS.length);
 const lampHead = mkI(new THREE.BoxGeometry(1.5, .34, .7), new THREE.MeshBasicMaterial({ color: 0xffe9a8 }), LAMPS.length);
@@ -274,4 +298,4 @@ function setNight(on) {
 }
 const getNight = () => isNight;
 
-export { setNight, getNight, bank,  THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad, sprite };
+export { setNight, getNight, bank, shahid,  THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad, sprite };
