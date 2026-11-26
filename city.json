@@ -2,13 +2,13 @@
  "meta": {
   "layout": "square-spiral-v1+reserved",
   "cell_size_note": "cell [x,y] x cell_size; never renumber slots; reserved cells are skipped",
-  "next_free_slot": 330,
+  "next_free_slot": 331,
   "next_free_cell": [
    -9,
-   -1
+   -2
   ],
-  "total_houses": 330,
-  "followers_count": 329,
+  "total_houses": 331,
+  "followers_count": 330,
   "episode": 9
  },
  "store": {
@@ -1563,7 +1563,8 @@
    "name_original": "يمان سبع الريف",
    "name_display": "يمان سبع الريف",
    "handle": "@goat.83923496",
-   "status": "new-ep2"
+   "status": "new-ep2",
+   "flag": "sy"
   },
   {
    "id": "f125",
@@ -2931,7 +2932,8 @@
    "name_original": "Youssef Al-bhar",
    "name_display": "Youssef Al-bhar",
    "handle": "@youssef_albhar",
-   "status": "new-ep7"
+   "status": "new-ep7",
+   "flag": "jo"
   },
   {
    "id": "f239",
@@ -3795,7 +3797,8 @@
    "name_original": "#𝓨𝓪𝓼𝓮𝓮𝓷 𝓐𝓵𝓪𝓪2013#",
    "name_display": "Yaseen Alaa 2013",
    "handle": "@yaseenalaa1662026",
-   "status": "new-ep9"
+   "status": "new-ep9",
+   "flag": "jo"
   },
   {
    "id": "f311",
@@ -4023,6 +4026,18 @@
    "name_original": "",
    "name_display": "",
    "handle": "@hamida_seffah",
+   "status": "new-ep9"
+  },
+  {
+   "id": "f330",
+   "slot": 330,
+   "cell": [
+    -9,
+    -1
+   ],
+   "name_original": "⚜ 𝓞𝓜𝓘𝓡 ⚜",
+   "name_display": "OMIR",
+   "handle": "@ol_cr.7",
    "status": "new-ep9"
   }
  ],

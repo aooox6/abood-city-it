@@ -126,6 +126,25 @@ const houses = [];
 const storeH = makeHouse(null, true); storeH.g.position.copy(cellPos([0, 0])); scene.add(storeH.g); storeH.slot = 0;
 for (const f of CITY.followers) { const h = makeHouse(f, false); h.g.position.copy(cellPos(f.cell)); h.slot = f.slot; h.f = f; scene.add(h.g); houses.push(h); }
 
+// ---------- country flags above residents' houses (follower.flag in city.json) ----------
+function star(g, x, y, r, n, inner) { g.beginPath(); for (let i = 0; i < n * 2; i++) { const a = -Math.PI / 2 + i * Math.PI / n, k = i % 2 ? r * inner : r; g[i ? 'lineTo' : 'moveTo'](x + Math.cos(a) * k, y + Math.sin(a) * k); } g.closePath(); g.fill(); }
+const stripes = (g, W, H, cols) => cols.forEach((c, i) => { g.fillStyle = c; g.fillRect(0, i * H / 3, W, H / 3 + 1); });
+const FLAGS = {
+  jo: { w: 600, h: 300, draw: (g, W, H) => { stripes(g, W, H, ['#000000', '#ffffff', '#007a3d']); g.fillStyle = '#ce1126'; g.beginPath(); g.moveTo(0, 0); g.lineTo(W / 2, H / 2); g.lineTo(0, H); g.closePath(); g.fill(); g.fillStyle = '#ffffff'; star(g, W * .155, H / 2, H * .095, 7, .48); } },
+  sy: { w: 600, h: 400, draw: (g, W, H) => { stripes(g, W, H, ['#007a3d', '#ffffff', '#000000']); g.fillStyle = '#ce1126'; for (const k of [.25, .5, .75]) star(g, W * k, H / 2, H * .13, 5, .382); } },
+};
+const flagTex = {}; const texFor = code => flagTex[code] || (flagTex[code] = (() => { const F = FLAGS[code], c = document.createElement('canvas'); c.width = F.w; c.height = F.h; F.draw(c.getContext('2d'), F.w, F.h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; })());
+const flags = [];
+for (const h of houses) { const code = h.f.flag; if (!FLAGS[code]) continue; const g = new THREE.Group(); g.position.set(-2.4, 3.8, 0);
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(.13, .16, 7.4, 8), new THREE.MeshLambertMaterial({ color: '#d9dde3' })); pole.position.y = 3.7; g.add(pole);
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(.3, 10, 8), new THREE.MeshBasicMaterial({ color: '#ffd45a' })); knob.position.y = 7.5; g.add(knob);
+  const W = 5.6, H = W * FLAGS[code].h / FLAGS[code].w; const geo = new THREE.PlaneGeometry(W, H, 28, 8).translate(W / 2, 0, 0);
+  const cloth = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: texFor(code), side: THREE.DoubleSide, fog: false })); cloth.position.set(.12, 7.25 - H / 2, 0); g.add(cloth);
+  h.g.add(g); flags.push({ slot: h.slot, code, g, geo, base: geo.attributes.position.array.slice(), W, ph: h.slot * 1.7 }); }
+// pure function of t (seconds), so the film can seek it
+function waveFlags(t) { for (const f of flags) { const a = f.geo.attributes.position.array; for (let i = 0; i < a.length; i += 3) { const x = f.base[i], k = x / f.W; a[i + 2] = Math.sin(x * 1.5 - t * 6 + f.ph) * .5 * k; a[i + 1] = f.base[i + 1] + Math.sin(x * 1.1 - t * 4.3 + f.ph) * .14 * k; } f.geo.attributes.position.needsUpdate = true; } }
+waveFlags(0);
+
 // ghost plot (next free slot) for the closing shot
 const ghostCell = CITY.meta.next_free_cell; const ghost = new THREE.Group(); ghost.position.copy(cellPos(ghostCell));
 { const pad = new THREE.Mesh(new THREE.PlaneGeometry(9.4, 7.8).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x9ccf6a, transparent: true, opacity: .55, depthWrite: false })); pad.position.y = .09; ghost.add(pad);
@@ -298,4 +317,4 @@ function setNight(on) {
 }
 const getNight = () => isNight;
 
-export { setNight, getNight, bank, shahid,  THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad, sprite };
+export { flags, waveFlags, setNight, getNight, bank, shahid,  THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad, sprite };

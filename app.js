@@ -1,4 +1,4 @@
-import { setNight, getNight, shahid, THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad } from './scene.js';
+import { waveFlags, setNight, getNight, shahid, THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad } from './scene.js';
 import { OrbitControls } from './OrbitControls.js';
 const $ = (id) => document.getElementById(id);
 // ---- static (read-only) city state: everything built, no reveal animation
@@ -82,6 +82,7 @@ function frame(now) {
   if (sel) { const k = .5 + .5 * Math.sin(now / 320); focusPad.material.opacity = .35 + .35 * k; beam.material.opacity = (.06 + .06 * k) * Math.min(1, Math.max(0, (camera.position.distanceTo(beam.position) - 30) / 60)); }
   for (const s of svc) { v3.copy(s.pos).project(camera); const d = camera.position.distanceTo(s.pos); const on = v3.z < 1 && Math.abs(v3.x) < .9 && v3.y > -1.1 && v3.y < 1.1 && d < 320; s.el.style.display = on ? 'flex' : 'none';
     if (on) { s.el.style.left = ((v3.x + 1) / 2 * innerWidth) + 'px'; s.el.style.top = ((1 - v3.y) / 2 * innerHeight) + 'px'; s.el.style.opacity = Math.max(.0, Math.min(1, (320 - d) / 120)); } }
+  waveFlags(now / 1000);
   renderer.render(scene, camera); requestAnimationFrame(frame);
 }
 addEventListener('resize', () => { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); });
