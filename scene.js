@@ -41,9 +41,9 @@ scene.add(sky);
 
 // ground
 const groundMat = new THREE.ShaderMaterial({
-  uniforms: { uReveal: { value: 0 }, uYellow: { value: 0 }, uCell: { value: CELL }, uFog: { value: 0.001 }, uZF: { value: 9999 }, uBand: { value: 0 }, uNight: { value: 0 }, uFogC: { value: new THREE.Vector3(.914, .808, .624) } },
+  uniforms: { uReveal: { value: 0 }, uYellow: { value: 0 }, uCell: { value: CELL }, uFog: { value: 0.001 }, uZF: { value: 9999 }, uBand: { value: 0 }, uNight: { value: 0 }, uPave: { value: 0 }, uFogC: { value: new THREE.Vector3(.914, .808, .624) } },
   vertexShader: 'varying vec3 vW; void main(){ vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }',
-  fragmentShader: `varying vec3 vW; uniform float uReveal,uYellow,uCell,uFog,uZF,uBand,uNight; uniform vec3 uFogC;
+  fragmentShader: `varying vec3 vW; uniform float uReveal,uYellow,uCell,uFog,uZF,uBand,uNight,uPave; uniform vec3 uFogC;
    float h21(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
    float vn(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.-2.*f); return mix(mix(h21(i),h21(i+vec2(1,0)),f.x),mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),f.x),f.y); }
    void main(){
@@ -60,8 +60,35 @@ const groundMat = new THREE.ShaderMaterial({
     float fade=1.-smoothstep(260.,1100.,vDist);
     float r=max(abs(p.x),abs(p.y)); float mask=1.-smoothstep(uReveal-1.2,uReveal,r);
     vec3 col=sand;
+    // paved city streets: asphalt, kerbs, sidewalks, lane lines and crossings (dirt tracks remain outside the city)
+    float city=1.-smoothstep(uPave-.3,uPave+2.1,r);
     vec3 avg=mix(sand,roadC,.22+.2*pv);
     vec3 grid=mix(col,roadC,road*.9); grid=mix(grid,lineC,edge*.8); grid=mix(grid,vec3(.98,.84,.28),cl);
+    if(city>0.){
+      float a1=max(fwidth(vW.x),fwidth(vW.z))*.9+1e-4;
+      float alongZ=step(d.x,d.y); float along=mix(vW.x,vW.z,alongZ), across=dm;
+      float asp=1.-smoothstep(1.95-a1,1.95+a1,dm);
+      float walk=(1.-smoothstep(2.85-a1,2.85+a1,dm))*(1.-asp);
+      float grain=(vn(p*2.3)-.5)*.05*nf+(vn(p*.21)-.5)*.045;
+      vec3 aspC=vec3(.19,.20,.22)+grain;
+      float tile=step(.9,fract(along/1.15))*nf;
+      vec3 walkC=vec3(.80,.77,.71)-tile*.10;
+      float kerb=(1.-smoothstep(.13,.13+a1,abs(dm-2.02)));
+      float side=(1.-smoothstep(.07,.07+a1,abs(dm-1.62)))*step(2.9,oth);
+      float dash=smoothstep(.0,.06,.55-abs(fract(along/4.2)-.5)*2.);
+      float mid=(1.-smoothstep(.11,.11+a1,dm))*step(5.0,oth)*dash;
+      float zb=step(2.95,oth)*(1.-step(4.5,oth))*(1.-step(1.55,dm));
+      float zs=smoothstep(.0,.12,abs(fract(across/.78)-.5)-.2);
+      float zfade=1.-smoothstep(70.,190.,vDist), lfade=1.-smoothstep(150.,520.,vDist);
+      vec3 st=sand; st=mix(st,walkC,walk); st=mix(st,aspC,asp);
+      st=mix(st,vec3(.92,.91,.86),kerb*lfade);
+      st=mix(st,vec3(.86,.87,.86),side*.75*lfade);
+      st=mix(st,vec3(.98,.78,.18),mid*lfade);
+      st=mix(st,vec3(.93,.93,.90),zb*zs*zfade);
+      vec3 pavedAvg=mix(sand,aspC,.46);
+      grid=mix(grid,st,city); avg=mix(avg,pavedAvg,city);
+      fade=mix(fade,1.-smoothstep(420.,1300.,vDist),city);
+    }
     col=mix(col,mix(avg,grid,fade),mask);
     float band=smoothstep(uReveal-2.0,uReveal-.9,r)*(1.-smoothstep(uReveal-.9,uReveal,r));
     col=mix(col,vec3(.98,.86,.18),band*uYellow);
@@ -126,6 +153,9 @@ const houses = [];
 const storeH = makeHouse(null, true); storeH.g.position.copy(cellPos([0, 0])); scene.add(storeH.g); storeH.slot = 0;
 for (const f of CITY.followers) { const h = makeHouse(f, false); h.g.position.copy(cellPos(f.cell)); h.slot = f.slot; h.f = f; scene.add(h.g); houses.push(h); }
 
+// pave every ring of the spiral that has a resident, so streets grow with the city
+groundMat.uniforms.uPave.value = Math.max(...CITY.followers.map(f => Math.max(Math.abs(f.cell[0]), Math.abs(f.cell[1])))) * CELL + CELL / 2;
+
 // ---------- country flags above residents' houses (follower.flag in city.json) ----------
 function star(g, x, y, r, n, inner) { g.beginPath(); for (let i = 0; i < n * 2; i++) { const a = -Math.PI / 2 + i * Math.PI / n, k = i % 2 ? r * inner : r; g[i ? 'lineTo' : 'moveTo'](x + Math.cos(a) * k, y + Math.sin(a) * k); } g.closePath(); g.fill(); }
 const stripes = (g, W, H, cols) => cols.forEach((c, i) => { g.fillStyle = c; g.fillRect(0, i * H / 3, W, H / 3 + 1); });
@@ -149,6 +179,46 @@ function waveFlags(t) { for (const f of flags) { const a = f.geo.attributes.posi
 waveFlags(0);
 // redraw text flags once the web font is ready
 if (document.fonts) document.fonts.load('900 60px Zain', 'الله أكبر').then(() => { const t = flagTex.iq; if (!t) return; const c = t.image; FLAGS.iq.draw(c.getContext('2d'), c.width, c.height); t.needsUpdate = true; });
+
+// ---------- trees: palms, round trees and cypresses on the left side of every plot (signs stay clear) ----------
+const trees = (() => {
+  const rand = rng(2026); const spots = { round: [], cypress: [], palm: [] };
+  const taken = new Set(CITY.services.map(s => s.cell.join(',')));
+  for (const f of CITY.followers) { if (taken.has(f.cell.join(','))) continue; const c = cellPos(f.cell);
+    for (const [ox, oz, back] of [[-4.45, -4.05, true], [-4.5, 3.7, false]]) { const r = rand();
+      const type = back ? (r < .42 ? 'palm' : r < .72 ? 'round' : 'cypress') : (r < .78 ? 'round' : 'cypress');
+      spots[type].push({ slot: f.slot, x: c.x + ox + (rand() - .5) * .3, z: c.z + oz + (rand() - .5) * .3, s: (back ? .92 : .7) + rand() * .22, a: rand() * 6.283, tone: rand() }); } }
+  // palms framing the store, the first houses' main square
+  for (const [ox, oz] of [[-5.9, -5.6], [5.9, -5.6], [-5.9, 5.4]]) spots.palm.push({ slot: 0, x: ox, z: oz, s: 1.25, a: rand() * 6.283, tone: rand() });
+  const frond = (() => { const pos = [], idx = []; let base = 0;
+    for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI * 2, lift = k % 2 ? .15 : .55, len = k % 2 ? 2.15 : 1.75, ca = Math.cos(a), sa = Math.sin(a);
+      for (let i = 0; i <= 5; i++) { const u = i / 5, r = u * len, y = Math.sin(u * Math.PI * .75) * (.55 + lift) - u * u * .75, w = Math.sin(Math.min(1, u * .9 + .08) * Math.PI) * .42 + .02;
+        pos.push(ca * r - sa * w, y - .12, sa * r + ca * w, ca * r, y + .05, sa * r, ca * r + sa * w, y - .12, sa * r - ca * w); }
+      for (let i = 0; i < 5; i++) { const q = base + i * 3; idx.push(q, q + 3, q + 1, q + 1, q + 3, q + 4, q + 1, q + 4, q + 2, q + 2, q + 4, q + 5); }
+      base += 18; }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals(); return g; })();
+  const L = (c, o = {}) => new THREE.MeshLambertMaterial({ color: c, flatShading: true, ...o });
+  const white = L('#ffffff'), leaf = L('#ffffff', { side: THREE.DoubleSide, emissive: '#0c2608' });
+  const trunkMat = L('#7a5434'), palmTrunk = L('#9a7446'), soil = L('#8a6a43'), blob = new THREE.MeshBasicMaterial({ color: 0x2b2412, transparent: true, opacity: .2, depthWrite: false });
+  const meshes = []; const dummy = new THREE.Object3D(), col = new THREE.Color();
+  const inst = (geo, mat, list, y, tones, sx = 1, sy = 1, dx = 0, dz = 0) => { const m = new THREE.InstancedMesh(geo, mat, list.length); m.frustumCulled = false;
+    list.forEach((p, i) => { dummy.position.set(p.x + dx * p.s, y * p.s, p.z + dz * p.s); dummy.rotation.set(0, p.a, 0); dummy.scale.set(p.s * sx, p.s * sy, p.s * sx); dummy.updateMatrix(); m.setMatrixAt(i, dummy.matrix); if (tones) m.setColorAt(i, col.set(tones[Math.floor(p.tone * tones.length) % tones.length])); });
+    scene.add(m); meshes.push(m); return m; };
+  const all = [...spots.round, ...spots.cypress, ...spots.palm];
+  inst(new THREE.CircleGeometry(1.35, 12).rotateX(-Math.PI / 2), blob, all, .06, null, 1, 1, .45, .25);
+  inst(new THREE.CylinderGeometry(.78, .86, .16, 8), soil, all, .08);
+  const R = spots.round, C = spots.cypress, P = spots.palm;
+  inst(new THREE.CylinderGeometry(.16, .24, 1.7, 6), trunkMat, R, .9);
+  inst(new THREE.IcosahedronGeometry(1.12, 1), white, R, 2.3, ['#3f8f3a', '#2f7d34', '#56a33f', '#47963c'], 1, .95);
+  inst(new THREE.IcosahedronGeometry(.74, 1), white, R, 3.15, ['#5fb046', '#4a9c3d', '#6cbb4c', '#58a944'], 1, .9, .2, -.1);
+  inst(new THREE.CylinderGeometry(.13, .18, .8, 6), trunkMat, C, .45);
+  inst(new THREE.ConeGeometry(.82, 3.5, 9), white, C, 2.4, ['#1f6b36', '#287a3d', '#1a5c30']);
+  inst(new THREE.CylinderGeometry(.17, .29, 4.1, 7), palmTrunk, P, 2.05);
+  for (const yy of [1.1, 2.0, 2.9]) inst(new THREE.CylinderGeometry(.28, .22, .16, 7), trunkMat, P, yy);
+  inst(frond, leaf, P, 4.2, ['#3c9a3a', '#4fae3f', '#348a35']);
+  inst(new THREE.SphereGeometry(.34, 8, 6), L('#b8661f'), P, 3.98);
+  return { meshes, spots };
+})();
 
 // ghost plot (next free slot) for the closing shot
 const ghostCell = CITY.meta.next_free_cell; const ghost = new THREE.Group(); ghost.position.copy(cellPos(ghostCell));
@@ -322,4 +392,4 @@ function setNight(on) {
 }
 const getNight = () => isNight;
 
-export { flags, waveFlags, setNight, getNight, bank, shahid,  THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad, sprite };
+export { trees, flags, waveFlags, setNight, getNight, bank, shahid,  THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad, sprite };
