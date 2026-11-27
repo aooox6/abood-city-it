@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { buildProjects } from './projects.js';
 const W = 720, H = 1280, CELL = 14, MAXH = 10000;
 const params = new URLSearchParams(location.search);
 const CITY = await (await fetch('city.json?'+Date.now())).json();
@@ -162,23 +163,29 @@ const stripes = (g, W, H, cols) => cols.forEach((c, i) => { g.fillStyle = c; g.f
 const FLAGS = {
   jo: { w: 600, h: 300, draw: (g, W, H) => { stripes(g, W, H, ['#000000', '#ffffff', '#007a3d']); g.fillStyle = '#ce1126'; g.beginPath(); g.moveTo(0, 0); g.lineTo(W / 2, H / 2); g.lineTo(0, H); g.closePath(); g.fill(); g.fillStyle = '#ffffff'; star(g, W * .155, H / 2, H * .095, 7, .48); } },
   ye: { w: 600, h: 400, draw: (g, W, H) => stripes(g, W, H, ['#ce1126', '#ffffff', '#000000']) },
+  sa: { w: 600, h: 400, draw: (g, W, H) => { g.fillStyle = '#006c35'; g.fillRect(0, 0, W, H); g.fillStyle = '#ffffff'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.direction = 'rtl'; fitText(g, 'لا إله إلا الله محمد رسول الله', 900, 96, W * .84); g.fillText('لا إله إلا الله محمد رسول الله', W / 2, H * .41);
+    // sword: blade pointing to the viewer's left, hilt on the right
+    g.beginPath(); g.moveTo(W * .17, H * .665); g.lineTo(W * .23, H * .645); g.lineTo(W * .76, H * .645); g.lineTo(W * .76, H * .675); g.lineTo(W * .23, H * .678); g.closePath(); g.fill();
+    g.fillRect(W * .762, H * .605, W * .014, H * .11); g.fillRect(W * .776, H * .645, W * .055, H * .03); g.beginPath(); g.arc(W * .837, H * .66, H * .022, 0, 7); g.fill(); } },
   de: { w: 600, h: 360, draw: (g, W, H) => stripes(g, W, H, ['#000000', '#dd0000', '#ffce00']) },
   iq: { w: 600, h: 400, draw: (g, W, H) => { stripes(g, W, H, ['#ce1126', '#ffffff', '#000000']); g.fillStyle = '#007a3d'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.direction = 'rtl'; g.font = '900 ' + Math.round(H * .17) + 'px Zain, sans-serif'; g.fillText('الله أكبر', W / 2, H / 2 + H * .005); } },
   sy: { w: 600, h: 400, draw: (g, W, H) => { stripes(g, W, H, ['#007a3d', '#ffffff', '#000000']); g.fillStyle = '#ce1126'; for (const k of [.25, .5, .75]) star(g, W * k, H / 2, H * .13, 5, .382); } },
 };
 const flagTex = {}; const texFor = code => flagTex[code] || (flagTex[code] = (() => { const F = FLAGS[code], c = document.createElement('canvas'); c.width = F.w; c.height = F.h; F.draw(c.getContext('2d'), F.w, F.h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; })());
-const flags = [];
+const flags = [], backTex = [];
 for (const h of houses) { const code = h.f.flag; if (!FLAGS[code]) continue; const g = new THREE.Group(); g.position.set(-2.4, 3.8, 0);
   const pole = new THREE.Mesh(new THREE.CylinderGeometry(.13, .16, 7.4, 8), new THREE.MeshLambertMaterial({ color: '#d9dde3' })); pole.position.y = 3.7; g.add(pole);
   const knob = new THREE.Mesh(new THREE.SphereGeometry(.3, 10, 8), new THREE.MeshBasicMaterial({ color: '#ffd45a' })); knob.position.y = 7.5; g.add(knob);
   const W = 5.6, H = W * FLAGS[code].h / FLAGS[code].w; const geo = new THREE.PlaneGeometry(W, H, 28, 8).translate(W / 2, 0, 0);
-  const cloth = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: texFor(code), side: THREE.DoubleSide, fog: false })); cloth.position.set(.12, 7.25 - H / 2, 0); g.add(cloth);
+  const text = code === 'sa' || code === 'iq';
+  const cloth = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: texFor(code), side: text ? THREE.FrontSide : THREE.DoubleSide, fog: false })); cloth.position.set(.12, 7.25 - H / 2, 0); g.add(cloth);
+  if (text) { const bt = texFor(code).clone(); bt.wrapS = THREE.RepeatWrapping; bt.repeat.x = -1; bt.needsUpdate = true; backTex.push([code, bt]); const back = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: bt, side: THREE.BackSide, fog: false })); back.position.copy(cloth.position); g.add(back); }
   h.g.add(g); flags.push({ slot: h.slot, code, g, geo, base: geo.attributes.position.array.slice(), W, ph: h.slot * 1.7 }); }
 // pure function of t (seconds), so the film can seek it
 function waveFlags(t) { for (const f of flags) { const a = f.geo.attributes.position.array; for (let i = 0; i < a.length; i += 3) { const x = f.base[i], k = x / f.W; a[i + 2] = Math.sin(x * 1.5 - t * 6 + f.ph) * .5 * k; a[i + 1] = f.base[i + 1] + Math.sin(x * 1.1 - t * 4.3 + f.ph) * .14 * k; } f.geo.attributes.position.needsUpdate = true; } }
 waveFlags(0);
 // redraw text flags once the web font is ready
-if (document.fonts) document.fonts.load('900 60px Zain', 'الله أكبر').then(() => { const t = flagTex.iq; if (!t) return; const c = t.image; FLAGS.iq.draw(c.getContext('2d'), c.width, c.height); t.needsUpdate = true; });
+if (document.fonts) document.fonts.load('900 60px Zain', 'الله أكبر لا إله إلا محمد رسول').then(() => { for (const code of ['iq', 'sa']) { const t = flagTex[code]; if (!t) continue; const c = t.image; FLAGS[code].draw(c.getContext('2d'), c.width, c.height); t.needsUpdate = true; } for (const [, b] of backTex) b.needsUpdate = true; });
 
 // ---------- trees: palms, round trees and cypresses on the left side of every plot (signs stay clear) ----------
 const trees = (() => {
@@ -357,6 +364,9 @@ const shahid = (() => { const g = new THREE.Group(); g.position.copy(svPos('shah
   const pool = new THREE.Mesh(new THREE.PlaneGeometry(30, 30).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: glowTex, color: 0x2fd0c0, transparent: true, opacity: .45, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })); pool.position.set(0, .14, 3); g.add(pool);
   scene.add(g); return { g, top: 19.5, logo, glow: gl, glow2: gl2, pool }; })();
 
+// ---------- stadium, airport and park (episode 11) ----------
+const projects = buildProjects(scene, svPos);
+
 // ---------- street lamps + day/night ----------
 const LAMPS = []; for (let i = -10; i <= 9; i++) for (let j = -10; j <= 9; j++) LAMPS.push([i * CELL + 7 + 2.0, j * CELL + 7 + 2.0]);
 const mkI = (geo, mat, n) => { const m = new THREE.InstancedMesh(geo, mat, n); m.frustumCulled = false; scene.add(m); return m; };
@@ -392,4 +402,4 @@ function setNight(on) {
 }
 const getNight = () => isNight;
 
-export { trees, flags, waveFlags, setNight, getNight, bank, shahid,  THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad, sprite };
+export { projects, trees, flags, waveFlags, setNight, getNight, bank, shahid,  THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad, sprite };

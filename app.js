@@ -1,4 +1,4 @@
-import { waveFlags, setNight, getNight, shahid, THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad } from './scene.js';
+import { projects, waveFlags, setNight, getNight, shahid, THREE, renderer, scene, camera, houses, storeH, cinema, mosque, groundMat, sky, dust, CITY, CELL, cellPos, SV, svPos, plotN, plotM, ghost, pad } from './scene.js';
 import { OrbitControls } from './OrbitControls.js';
 const $ = (id) => document.getElementById(id);
 // ---- static (read-only) city state: everything built, no reveal animation
@@ -10,6 +10,7 @@ const byslot = new Map(houses.map(h => [h.slot, h]));
 $('cnt').textContent = String(houses.length);
 // bounds
 let bx0 = 1e9, bx1 = -1e9, bz0 = 1e9, bz1 = -1e9; houses.forEach(h => { const p = h.g.position; bx0 = Math.min(bx0, p.x); bx1 = Math.max(bx1, p.x); bz0 = Math.min(bz0, p.z); bz1 = Math.max(bz1, p.z); });
+for (const p of [projects.park, projects.airport, projects.stadium]) { const q = p.g.position; bx0 = Math.min(bx0, q.x); bx1 = Math.max(bx1, q.x); bz0 = Math.min(bz0, q.z); bz1 = Math.max(bz1, q.z); }
 const M = 45; bx0 -= M; bx1 += M; bz0 -= M; bz1 += M;
 // ---- controls
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -82,7 +83,7 @@ function frame(now) {
   if (sel) { const k = .5 + .5 * Math.sin(now / 320); focusPad.material.opacity = .35 + .35 * k; beam.material.opacity = (.06 + .06 * k) * Math.min(1, Math.max(0, (camera.position.distanceTo(beam.position) - 30) / 60)); }
   for (const s of svc) { v3.copy(s.pos).project(camera); const d = camera.position.distanceTo(s.pos); const on = v3.z < 1 && Math.abs(v3.x) < .9 && v3.y > -1.1 && v3.y < 1.1 && d < 320; s.el.style.display = on ? 'flex' : 'none';
     if (on) { s.el.style.left = ((v3.x + 1) / 2 * innerWidth) + 'px'; s.el.style.top = ((1 - v3.y) / 2 * innerHeight) + 'px'; s.el.style.opacity = Math.max(.0, Math.min(1, (320 - d) / 120)); } }
-  waveFlags(now / 1000);
+  waveFlags(now / 1000); projects.update(now / 1000);
   renderer.render(scene, camera); requestAnimationFrame(frame);
 }
 addEventListener('resize', () => { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); });

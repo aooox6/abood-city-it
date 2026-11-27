@@ -2,14 +2,14 @@
  "meta": {
   "layout": "square-spiral-v1+reserved",
   "cell_size_note": "cell [x,y] x cell_size; never renumber slots; reserved cells are skipped",
-  "next_free_slot": 351,
+  "next_free_slot": 396,
   "next_free_cell": [
-   4,
-   -9
+   -10,
+   10
   ],
-  "total_houses": 351,
-  "followers_count": 350,
-  "episode": 10
+  "total_houses": 396,
+  "followers_count": 395,
+  "episode": 11
  },
  "store": {
   "slot": 0,
@@ -74,6 +74,281 @@
     "text": "السلام عليكم، أبغى أطلب اشتراك شاهد VIP من عبود ستور",
     "label": "اطلب عبر واتساب"
    }
+  },
+  {
+   "id": "park",
+   "name": "حديقة المدينة",
+   "cell": [
+    -6,
+    13
+   ],
+   "cells": [
+    [
+     -7,
+     12
+    ],
+    [
+     -6,
+     12
+    ],
+    [
+     -5,
+     12
+    ],
+    [
+     -7,
+     13
+    ],
+    [
+     -6,
+     13
+    ],
+    [
+     -5,
+     13
+    ],
+    [
+     -7,
+     14
+    ],
+    [
+     -6,
+     14
+    ],
+    [
+     -5,
+     14
+    ]
+   ],
+   "counted": false,
+   "facing": "south",
+   "yaw_deg": 0
+  },
+  {
+   "id": "airport",
+   "name": "مطار المدينة",
+   "cell": [
+    0,
+    13
+   ],
+   "cells": [
+    [
+     -2,
+     11
+    ],
+    [
+     -1,
+     11
+    ],
+    [
+     0,
+     11
+    ],
+    [
+     1,
+     11
+    ],
+    [
+     2,
+     11
+    ],
+    [
+     -2,
+     12
+    ],
+    [
+     -1,
+     12
+    ],
+    [
+     0,
+     12
+    ],
+    [
+     1,
+     12
+    ],
+    [
+     2,
+     12
+    ],
+    [
+     -2,
+     13
+    ],
+    [
+     -1,
+     13
+    ],
+    [
+     0,
+     13
+    ],
+    [
+     1,
+     13
+    ],
+    [
+     2,
+     13
+    ],
+    [
+     -2,
+     14
+    ],
+    [
+     -1,
+     14
+    ],
+    [
+     0,
+     14
+    ],
+    [
+     1,
+     14
+    ],
+    [
+     2,
+     14
+    ],
+    [
+     -2,
+     15
+    ],
+    [
+     -1,
+     15
+    ],
+    [
+     0,
+     15
+    ],
+    [
+     1,
+     15
+    ],
+    [
+     2,
+     15
+    ]
+   ],
+   "counted": false,
+   "facing": "south",
+   "yaw_deg": 0
+  },
+  {
+   "id": "stadium",
+   "name": "ملعب المدينة",
+   "cell": [
+    6,
+    13
+   ],
+   "cells": [
+    [
+     4,
+     11
+    ],
+    [
+     5,
+     11
+    ],
+    [
+     6,
+     11
+    ],
+    [
+     7,
+     11
+    ],
+    [
+     8,
+     11
+    ],
+    [
+     4,
+     12
+    ],
+    [
+     5,
+     12
+    ],
+    [
+     6,
+     12
+    ],
+    [
+     7,
+     12
+    ],
+    [
+     8,
+     12
+    ],
+    [
+     4,
+     13
+    ],
+    [
+     5,
+     13
+    ],
+    [
+     6,
+     13
+    ],
+    [
+     7,
+     13
+    ],
+    [
+     8,
+     13
+    ],
+    [
+     4,
+     14
+    ],
+    [
+     5,
+     14
+    ],
+    [
+     6,
+     14
+    ],
+    [
+     7,
+     14
+    ],
+    [
+     8,
+     14
+    ],
+    [
+     4,
+     15
+    ],
+    [
+     5,
+     15
+    ],
+    [
+     6,
+     15
+    ],
+    [
+     7,
+     15
+    ],
+    [
+     8,
+     15
+    ]
+   ],
+   "counted": false,
+   "facing": "south",
+   "yaw_deg": 0
   }
  ],
  "followers": [
@@ -436,7 +711,8 @@
    "name_original": "إلياس الحاج",
    "name_display": "إلياس الحاج",
    "handle": "@ely770as",
-   "status": "active"
+   "status": "active",
+   "flag": "ye"
   },
   {
    "id": "f031",
@@ -544,7 +820,8 @@
    "name_original": "FŤôöņ",
    "name_display": "FŤôöņ",
    "handle": "@f6t__n",
-   "status": "active"
+   "status": "active",
+   "flag": "ye"
   },
   {
    "id": "f040",
@@ -808,7 +1085,8 @@
    "name_original": "7",
    "name_display": "7",
    "handle": "@gxxe.505",
-   "status": "resident"
+   "status": "resident",
+   "flag": "sa"
   },
   {
    "id": "f062",
@@ -1505,7 +1783,8 @@
    "name_original": "حسين محمد",
    "name_display": "حسين محمد",
    "handle": "@wfi_0",
-   "status": "resident"
+   "status": "resident",
+   "flag": "ye"
   },
   {
    "id": "f120",
@@ -1603,7 +1882,8 @@
    "name_original": "عبدالله عمر",
    "name_display": "عبدالله عمر",
    "handle": "@a.insta.20",
-   "status": "resident"
+   "status": "resident",
+   "flag": "ye"
   },
   {
    "id": "f128",
@@ -1687,7 +1967,8 @@
    "name_original": "بدر العبدالله",
    "name_display": "بدر العبدالله",
    "handle": "@goosbice.56960010",
-   "status": "resident"
+   "status": "resident",
+   "flag": "sy"
   },
   {
    "id": "f135",
@@ -2800,10 +3081,10 @@
     8,
     -3
    ],
-   "name_original": "bn_en",
-   "name_display": "bn_en",
-   "handle": "@bn_en109",
-   "status": "resident"
+   "name_original": "ابراهيم الشاطر",
+   "name_display": "ابراهيم الشاطر",
+   "handle": "@dhbub6evmk4",
+   "status": "new-ep11"
   },
   {
    "id": "f228",
@@ -3057,7 +3338,8 @@
    "name_original": "M_S",
    "name_display": "M_S",
    "handle": "@m_s5511555",
-   "status": "resident"
+   "status": "resident",
+   "flag": "sy"
   },
   {
    "id": "f249",
@@ -3513,7 +3795,8 @@
    "name_original": "",
    "name_display": "",
    "handle": "@alialmallah1",
-   "status": "resident"
+   "status": "resident",
+   "flag": "sy"
   },
   {
    "id": "f287",
@@ -3597,7 +3880,8 @@
    "name_original": "Badr alfath",
    "name_display": "Badr alfath",
    "handle": "@b7.r_a",
-   "status": "new-ep10"
+   "status": "resident",
+   "flag": "ye"
   },
   {
    "id": "f294",
@@ -3642,10 +3926,10 @@
     9,
     4
    ],
-   "name_original": "its.btl",
-   "name_display": "its.btl",
-   "handle": "@pl.ay51",
-   "status": "resident"
+   "name_original": "عبود 1994",
+   "name_display": "عبود 1994",
+   "handle": "@3bady.1415",
+   "status": "new-ep11"
   },
   {
    "id": "f298",
@@ -3862,7 +4146,8 @@
    "name_original": "apod",
    "name_display": "apod",
    "handle": "@abodahm44",
-   "status": "resident"
+   "status": "resident",
+   "flag": "sy"
   },
   {
    "id": "f316",
@@ -3970,7 +4255,8 @@
    "name_original": "أحمد حاصل",
    "name_display": "أحمد حاصل",
    "handle": "@hmd328991",
-   "status": "resident"
+   "status": "resident",
+   "flag": "ye"
   },
   {
    "id": "f325",
@@ -4054,7 +4340,7 @@
    "name_original": "محمد الحسين",
    "name_display": "محمد الحسين",
    "handle": "@muhammad_alhussei",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f332",
@@ -4066,7 +4352,7 @@
    "name_original": "بطيخة🍉",
    "name_display": "بطيخة",
    "handle": "@queen_ptekh",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f333",
@@ -4078,7 +4364,7 @@
    "name_original": "أَ",
    "name_display": "ساكن المدينة",
    "handle": "@2jilit",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f334",
@@ -4090,7 +4376,7 @@
    "name_original": "⚡️",
    "name_display": "ساكن المدينة",
    "handle": "@7iiiilc_",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f335",
@@ -4102,7 +4388,7 @@
    "name_original": "YOLO",
    "name_display": "YOLO",
    "handle": "@yolo43807",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f336",
@@ -4114,7 +4400,7 @@
    "name_original": "Ghaidak A Yousef",
    "name_display": "Ghaidak A Yousef",
    "handle": "@ghaidak_a_yousef",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f337",
@@ -4126,7 +4412,7 @@
    "name_original": ".",
    "name_display": "ساكن المدينة",
    "handle": "@b_w__m12k",
-   "status": "new-ep10",
+   "status": "resident",
    "flag": "sy"
   },
   {
@@ -4139,7 +4425,7 @@
    "name_original": "Baker♕",
    "name_display": "Baker",
    "handle": "@baker_alhenwe",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f339",
@@ -4151,7 +4437,7 @@
    "name_original": "⚜️محمد ⚜️السعيدي⚜️",
    "name_display": "محمد السعيدي",
    "handle": "@c5.mg1",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f340",
@@ -4163,7 +4449,7 @@
    "name_original": "F_70",
    "name_display": "F_70",
    "handle": "@f_70_._",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f341",
@@ -4172,10 +4458,10 @@
     -6,
     -9
    ],
-   "name_original": "عباس | abaas",
-   "name_display": "عباس | abaas",
-   "handle": "@8k_o",
-   "status": "new-ep10"
+   "name_original": "M",
+   "name_display": "M",
+   "handle": "@est3.__mevvry",
+   "status": "new-ep11"
   },
   {
    "id": "f342",
@@ -4187,7 +4473,7 @@
    "name_original": "يـمان الددا",
    "name_display": "يمان الددا",
    "handle": "@y_a_.m.1x",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f343",
@@ -4199,7 +4485,8 @@
    "name_original": ".",
    "name_display": "ساكن المدينة",
    "handle": "@f23rly",
-   "status": "new-ep10"
+   "status": "resident",
+   "flag": "sa"
   },
   {
    "id": "f344",
@@ -4211,7 +4498,7 @@
    "name_original": "Mohmad Douba",
    "name_display": "Mohmad Douba",
    "handle": "@dwiwimohamd",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f345",
@@ -4223,7 +4510,7 @@
    "name_original": "مستخدم lnstgram.",
    "name_display": "ساكن المدينة",
    "handle": "@bwjsm7539",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f346",
@@ -4235,7 +4522,7 @@
    "name_original": "dayaa cafee",
    "name_display": "dayaa cafee",
    "handle": "@dayaacafee",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f347",
@@ -4244,10 +4531,11 @@
     0,
     -9
    ],
-   "name_original": "ＶＩＯＬＡ𓍼",
-   "name_display": "VIOLA",
-   "handle": "@mn_mop2",
-   "status": "new-ep10"
+   "name_original": "Meem Abdullah",
+   "name_display": "Meem Abdullah",
+   "handle": "@m9_ahd",
+   "status": "new-ep11",
+   "flag": "ye"
   },
   {
    "id": "f348",
@@ -4259,7 +4547,7 @@
    "name_original": "I’m",
    "name_display": "I’m",
    "handle": "@vj_.e2",
-   "status": "new-ep10",
+   "status": "resident",
    "flag": "ye"
   },
   {
@@ -4272,7 +4560,7 @@
    "name_original": "يزن الحريري | Yazan Alhariri",
    "name_display": "يزن الحريري",
    "handle": "@y_z_n_911",
-   "status": "new-ep10"
+   "status": "resident"
   },
   {
    "id": "f350",
@@ -4284,8 +4572,557 @@
    "name_original": "༺𒋲Police❂༻مغرور༺𒋲Ace❂༻",
    "name_display": "Police مغرور",
    "handle": "@gg_uu8.7",
-   "status": "new-ep10",
+   "status": "resident",
    "flag": "ye"
+  },
+  {
+   "id": "f351",
+   "slot": 351,
+   "cell": [
+    4,
+    -9
+   ],
+   "name_original": "ساكن المدينة",
+   "name_display": "ساكن المدينة",
+   "handle": "@1atcp",
+   "status": "new-ep11",
+   "flag": "ye"
+  },
+  {
+   "id": "f352",
+   "slot": 352,
+   "cell": [
+    5,
+    -9
+   ],
+   "name_original": "صادق البرق",
+   "name_display": "صادق البرق",
+   "handle": "@v.d0u",
+   "status": "new-ep11",
+   "flag": "ye"
+  },
+  {
+   "id": "f353",
+   "slot": 353,
+   "cell": [
+    6,
+    -9
+   ],
+   "name_original": "mr cat 76",
+   "name_display": "mr cat 76",
+   "handle": "@mr_cat_670719",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f354",
+   "slot": 354,
+   "cell": [
+    7,
+    -9
+   ],
+   "name_original": "RoAA",
+   "name_display": "RoAA",
+   "handle": "@roaawlyd261",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f355",
+   "slot": 355,
+   "cell": [
+    8,
+    -9
+   ],
+   "name_original": "ساكن المدينة",
+   "name_display": "ساكن المدينة",
+   "handle": "@mozan1i",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f356",
+   "slot": 356,
+   "cell": [
+    9,
+    -9
+   ],
+   "name_original": "أبو هيثم",
+   "name_display": "أبو هيثم",
+   "handle": "@husen198200",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f357",
+   "slot": 357,
+   "cell": [
+    10,
+    -9
+   ],
+   "name_original": "阿米爾",
+   "name_display": "阿米爾",
+   "handle": "@ameer_fayz_2015",
+   "status": "new-ep11",
+   "flag": "jo"
+  },
+  {
+   "id": "f358",
+   "slot": 358,
+   "cell": [
+    10,
+    -8
+   ],
+   "name_original": "عمران حكمت الفتلاوي",
+   "name_display": "عمران حكمت الفتلاوي",
+   "handle": "@aomrin_hkmt",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f359",
+   "slot": 359,
+   "cell": [
+    10,
+    -7
+   ],
+   "name_original": "Ayman alhani",
+   "name_display": "Ayman alhani",
+   "handle": "@60ai2",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f360",
+   "slot": 360,
+   "cell": [
+    10,
+    -6
+   ],
+   "name_original": "JameelAlzoubi",
+   "name_display": "JameelAlzoubi",
+   "handle": "@jameel_alzoubee",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f361",
+   "slot": 361,
+   "cell": [
+    10,
+    -5
+   ],
+   "name_original": "العامري 912",
+   "name_display": "العامري 912",
+   "handle": "@_r912_k_",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f362",
+   "slot": 362,
+   "cell": [
+    10,
+    -4
+   ],
+   "name_original": "SAIF KTATBH",
+   "name_display": "SAIF KTATBH",
+   "handle": "@abodkh253",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f363",
+   "slot": 363,
+   "cell": [
+    10,
+    -3
+   ],
+   "name_original": "Ey20d",
+   "name_display": "Ey20d",
+   "handle": "@eyad20y",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f364",
+   "slot": 364,
+   "cell": [
+    10,
+    -2
+   ],
+   "name_original": "Fahad Bindnah",
+   "name_display": "Fahad Bindnah",
+   "handle": "@fahad_bindnah",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f365",
+   "slot": 365,
+   "cell": [
+    10,
+    -1
+   ],
+   "name_original": "فانز وئام خضور",
+   "name_display": "فانز وئام خضور",
+   "handle": "@fanzwyam",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f366",
+   "slot": 366,
+   "cell": [
+    10,
+    0
+   ],
+   "name_original": "محمد الرجى العنزي",
+   "name_display": "محمد الرجى العنزي",
+   "handle": "@smrldwsry17",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f367",
+   "slot": 367,
+   "cell": [
+    10,
+    1
+   ],
+   "name_original": "bybro 760",
+   "name_display": "bybro 760",
+   "handle": "@rafik.alaska.9",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f368",
+   "slot": 368,
+   "cell": [
+    10,
+    2
+   ],
+   "name_original": "ساكن المدينة",
+   "name_display": "ساكن المدينة",
+   "handle": "@obaida_chehade",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f369",
+   "slot": 369,
+   "cell": [
+    10,
+    3
+   ],
+   "name_original": "ساكن المدينة",
+   "name_display": "ساكن المدينة",
+   "handle": "@rayan_breikat",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f370",
+   "slot": 370,
+   "cell": [
+    10,
+    4
+   ],
+   "name_original": "Youssef Shob",
+   "name_display": "Youssef Shob",
+   "handle": "@yusuf.ali.2013.12",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f371",
+   "slot": 371,
+   "cell": [
+    10,
+    5
+   ],
+   "name_original": "حمودي الطائي",
+   "name_display": "حمودي الطائي",
+   "handle": "@hmwdyltyy344",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f372",
+   "slot": 372,
+   "cell": [
+    10,
+    6
+   ],
+   "name_original": "AHMAD",
+   "name_display": "AHMAD",
+   "handle": "@moii_uu990",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f373",
+   "slot": 373,
+   "cell": [
+    10,
+    7
+   ],
+   "name_original": "إياد Eyad",
+   "name_display": "إياد Eyad",
+   "handle": "@yd89144",
+   "status": "new-ep11",
+   "flag": "ye"
+  },
+  {
+   "id": "f374",
+   "slot": 374,
+   "cell": [
+    10,
+    8
+   ],
+   "name_original": "شهد",
+   "name_display": "شهد",
+   "handle": "@fatma912813",
+   "status": "new-ep11",
+   "flag": "ye"
+  },
+  {
+   "id": "f375",
+   "slot": 375,
+   "cell": [
+    10,
+    9
+   ],
+   "name_original": "ساكن المدينة",
+   "name_display": "ساكن المدينة",
+   "handle": "@majed_armoush_x2x",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f376",
+   "slot": 376,
+   "cell": [
+    10,
+    10
+   ],
+   "name_original": "ساكن المدينة",
+   "name_display": "ساكن المدينة",
+   "handle": "@gagcsz",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f377",
+   "slot": 377,
+   "cell": [
+    9,
+    10
+   ],
+   "name_original": "ساكن المدينة",
+   "name_display": "ساكن المدينة",
+   "handle": "@i__r_8__a",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f378",
+   "slot": 378,
+   "cell": [
+    8,
+    10
+   ],
+   "name_original": "ساكن المدينة",
+   "name_display": "ساكن المدينة",
+   "handle": "@hosenu7689",
+   "status": "new-ep11",
+   "flag": "sy"
+  },
+  {
+   "id": "f379",
+   "slot": 379,
+   "cell": [
+    7,
+    10
+   ],
+   "name_original": "Abdullah Alamri",
+   "name_display": "Abdullah Alamri",
+   "handle": "@alamriiii6",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f380",
+   "slot": 380,
+   "cell": [
+    6,
+    10
+   ],
+   "name_original": "ساكن المدينة",
+   "name_display": "ساكن المدينة",
+   "handle": "@teebmon3",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f381",
+   "slot": 381,
+   "cell": [
+    5,
+    10
+   ],
+   "name_original": "Shimaa Elawady",
+   "name_display": "Shimaa Elawady",
+   "handle": "@engshimaaelawady",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f382",
+   "slot": 382,
+   "cell": [
+    4,
+    10
+   ],
+   "name_original": "abdllalrhman",
+   "name_display": "abdllalrhman",
+   "handle": "@abdllalrhman",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f383",
+   "slot": 383,
+   "cell": [
+    3,
+    10
+   ],
+   "name_original": "Dahoomy1780",
+   "name_display": "Dahoomy1780",
+   "handle": "@dahoomy1780",
+   "status": "new-ep11",
+   "flag": "sa"
+  },
+  {
+   "id": "f384",
+   "slot": 384,
+   "cell": [
+    2,
+    10
+   ],
+   "name_original": "ذو الفقار احمد الخفاجي",
+   "name_display": "ذو الفقار احمد الخفاجي",
+   "handle": "@fqwry585",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f385",
+   "slot": 385,
+   "cell": [
+    1,
+    10
+   ],
+   "name_original": "Ahmedmohye",
+   "name_display": "Ahmedmohye",
+   "handle": "@ahmedmohye27",
+   "status": "new-ep11",
+   "flag": "ye"
+  },
+  {
+   "id": "f386",
+   "slot": 386,
+   "cell": [
+    0,
+    10
+   ],
+   "name_original": "ساكن المدينة",
+   "name_display": "ساكن المدينة",
+   "handle": "@y0i_7",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f387",
+   "slot": 387,
+   "cell": [
+    -1,
+    10
+   ],
+   "name_original": "Bin Almeliki",
+   "name_display": "Bin Almeliki",
+   "handle": "@0b7dy",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f388",
+   "slot": 388,
+   "cell": [
+    -2,
+    10
+   ],
+   "name_original": "محمد القميحه",
+   "name_display": "محمد القميحه",
+   "handle": "@i0oi1__",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f389",
+   "slot": 389,
+   "cell": [
+    -3,
+    10
+   ],
+   "name_original": "الفهد alfahad",
+   "name_display": "الفهد alfahad",
+   "handle": "@m.h.n_85",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f390",
+   "slot": 390,
+   "cell": [
+    -4,
+    10
+   ],
+   "name_original": "محمد ابو عبدو",
+   "name_display": "محمد ابو عبدو",
+   "handle": "@mhmdshykhsalh5",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f391",
+   "slot": 391,
+   "cell": [
+    -5,
+    10
+   ],
+   "name_original": "محمد ادم نعمان",
+   "name_display": "محمد ادم نعمان",
+   "handle": "@mohmaed95719",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f392",
+   "slot": 392,
+   "cell": [
+    -6,
+    10
+   ],
+   "name_original": "Nishimura Riki",
+   "name_display": "Nishimura Riki",
+   "handle": "@dolphin.5652494",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f393",
+   "slot": 393,
+   "cell": [
+    -7,
+    10
+   ],
+   "name_original": "Goko",
+   "name_display": "Goko",
+   "handle": "@moh_amehdi",
+   "status": "new-ep11"
+  },
+  {
+   "id": "f394",
+   "slot": 394,
+   "cell": [
+    -8,
+    10
+   ],
+   "name_original": "عنق الغزال",
+   "name_display": "عنق الغزال",
+   "handle": "@iguana.7018826",
+   "status": "new-ep11",
+   "flag": "ye"
+  },
+  {
+   "id": "f395",
+   "slot": 395,
+   "cell": [
+    -9,
+    10
+   ],
+   "name_original": "Ahmad Mahammad",
+   "name_display": "Ahmad Mahammad",
+   "handle": "@rayanahmad78999",
+   "status": "new-ep11"
   }
  ],
  "site": {
