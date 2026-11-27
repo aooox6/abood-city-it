@@ -131,6 +131,9 @@ function star(g, x, y, r, n, inner) { g.beginPath(); for (let i = 0; i < n * 2; 
 const stripes = (g, W, H, cols) => cols.forEach((c, i) => { g.fillStyle = c; g.fillRect(0, i * H / 3, W, H / 3 + 1); });
 const FLAGS = {
   jo: { w: 600, h: 300, draw: (g, W, H) => { stripes(g, W, H, ['#000000', '#ffffff', '#007a3d']); g.fillStyle = '#ce1126'; g.beginPath(); g.moveTo(0, 0); g.lineTo(W / 2, H / 2); g.lineTo(0, H); g.closePath(); g.fill(); g.fillStyle = '#ffffff'; star(g, W * .155, H / 2, H * .095, 7, .48); } },
+  ye: { w: 600, h: 400, draw: (g, W, H) => stripes(g, W, H, ['#ce1126', '#ffffff', '#000000']) },
+  de: { w: 600, h: 360, draw: (g, W, H) => stripes(g, W, H, ['#000000', '#dd0000', '#ffce00']) },
+  iq: { w: 600, h: 400, draw: (g, W, H) => { stripes(g, W, H, ['#ce1126', '#ffffff', '#000000']); g.fillStyle = '#007a3d'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.direction = 'rtl'; g.font = '900 ' + Math.round(H * .17) + 'px Zain, sans-serif'; g.fillText('الله أكبر', W / 2, H / 2 + H * .005); } },
   sy: { w: 600, h: 400, draw: (g, W, H) => { stripes(g, W, H, ['#007a3d', '#ffffff', '#000000']); g.fillStyle = '#ce1126'; for (const k of [.25, .5, .75]) star(g, W * k, H / 2, H * .13, 5, .382); } },
 };
 const flagTex = {}; const texFor = code => flagTex[code] || (flagTex[code] = (() => { const F = FLAGS[code], c = document.createElement('canvas'); c.width = F.w; c.height = F.h; F.draw(c.getContext('2d'), F.w, F.h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; })());
@@ -144,6 +147,8 @@ for (const h of houses) { const code = h.f.flag; if (!FLAGS[code]) continue; con
 // pure function of t (seconds), so the film can seek it
 function waveFlags(t) { for (const f of flags) { const a = f.geo.attributes.position.array; for (let i = 0; i < a.length; i += 3) { const x = f.base[i], k = x / f.W; a[i + 2] = Math.sin(x * 1.5 - t * 6 + f.ph) * .5 * k; a[i + 1] = f.base[i + 1] + Math.sin(x * 1.1 - t * 4.3 + f.ph) * .14 * k; } f.geo.attributes.position.needsUpdate = true; } }
 waveFlags(0);
+// redraw text flags once the web font is ready
+if (document.fonts) document.fonts.load('900 60px Zain', 'الله أكبر').then(() => { const t = flagTex.iq; if (!t) return; const c = t.image; FLAGS.iq.draw(c.getContext('2d'), c.width, c.height); t.needsUpdate = true; });
 
 // ghost plot (next free slot) for the closing shot
 const ghostCell = CITY.meta.next_free_cell; const ghost = new THREE.Group(); ghost.position.copy(cellPos(ghostCell));
